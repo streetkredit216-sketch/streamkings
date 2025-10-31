@@ -1,0 +1,506 @@
+{
+  "address": "D4b2rvBeV4sMAkPRZjytgzWoi1N57jFrrFq2oxDyGPtU",
+  "metadata": {
+    "name": "uniform_token_actions",
+    "version": "0.1.0",
+    "spec": "0.1.0",
+    "description": "Created with Anchor"
+  },
+  "instructions": [
+    {
+      "name": "add_action",
+      "docs": [
+        "Add a new action to the config (upgradeable)"
+      ],
+      "discriminator": [
+        96,
+        90,
+        68,
+        182,
+        95,
+        52,
+        192,
+        101
+      ],
+      "accounts": [
+        {
+          "name": "config",
+          "writable": true
+        },
+        {
+          "name": "authority",
+          "signer": true
+        }
+      ],
+      "args": [
+        {
+          "name": "new_action",
+          "type": {
+            "defined": {
+              "name": "ActionConfig"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "init_config",
+      "discriminator": [
+        23,
+        235,
+        115,
+        232,
+        168,
+        96,
+        1,
+        231
+      ],
+      "accounts": [
+        {
+          "name": "config",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  99,
+                  111,
+                  110,
+                  102,
+                  105,
+                  103
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "name": "authority",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "system_program",
+          "address": "11111111111111111111111111111111"
+        }
+      ],
+      "args": [
+        {
+          "name": "fee_wallet",
+          "type": "pubkey"
+        },
+        {
+          "name": "platform_wallet",
+          "type": "pubkey"
+        },
+        {
+          "name": "token_mint",
+          "type": "pubkey"
+        },
+        {
+          "name": "actions",
+          "type": {
+            "vec": {
+              "defined": {
+                "name": "ActionConfig"
+              }
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "platform_action",
+      "docs": [
+        "Platform-earning action: User → Platform (with fee split to fee_wallet and platform_wallet)"
+      ],
+      "discriminator": [
+        64,
+        10,
+        211,
+        207,
+        118,
+        161,
+        170,
+        243
+      ],
+      "accounts": [
+        {
+          "name": "from",
+          "writable": true
+        },
+        {
+          "name": "platform_wallet",
+          "writable": true
+        },
+        {
+          "name": "fee_wallet",
+          "writable": true
+        },
+        {
+          "name": "config",
+          "writable": true
+        },
+        {
+          "name": "mint"
+        },
+        {
+          "name": "authority",
+          "signer": true
+        },
+        {
+          "name": "token_program"
+        },
+        {
+          "name": "system_program",
+          "address": "11111111111111111111111111111111"
+        }
+      ],
+      "args": [
+        {
+          "name": "action",
+          "type": "string"
+        },
+        {
+          "name": "_amount",
+          "type": "u64"
+        }
+      ]
+    },
+    {
+      "name": "remove_action",
+      "discriminator": [
+        65,
+        241,
+        237,
+        239,
+        87,
+        171,
+        6,
+        114
+      ],
+      "accounts": [
+        {
+          "name": "config",
+          "writable": true
+        },
+        {
+          "name": "authority",
+          "signer": true
+        }
+      ],
+      "args": [
+        {
+          "name": "action_name",
+          "type": "string"
+        }
+      ]
+    },
+    {
+      "name": "update_action",
+      "discriminator": [
+        31,
+        4,
+        202,
+        169,
+        214,
+        55,
+        240,
+        55
+      ],
+      "accounts": [
+        {
+          "name": "config",
+          "writable": true
+        },
+        {
+          "name": "authority",
+          "signer": true
+        }
+      ],
+      "args": [
+        {
+          "name": "action_name",
+          "type": "string"
+        },
+        {
+          "name": "updated_action",
+          "type": {
+            "defined": {
+              "name": "ActionConfig"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "update_config",
+      "discriminator": [
+        29,
+        158,
+        252,
+        191,
+        10,
+        83,
+        219,
+        99
+      ],
+      "accounts": [
+        {
+          "name": "config",
+          "writable": true
+        },
+        {
+          "name": "authority",
+          "signer": true
+        }
+      ],
+      "args": [
+        {
+          "name": "fee_wallet",
+          "type": "pubkey"
+        },
+        {
+          "name": "platform_wallet",
+          "type": "pubkey"
+        },
+        {
+          "name": "token_mint",
+          "type": "pubkey"
+        },
+        {
+          "name": "actions",
+          "type": {
+            "vec": {
+              "defined": {
+                "name": "ActionConfig"
+              }
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "user_action",
+      "docs": [
+        "User-to-user action: User → User + fee to Platform/Fee Wallet"
+      ],
+      "discriminator": [
+        65,
+        153,
+        189,
+        186,
+        250,
+        208,
+        56,
+        246
+      ],
+      "accounts": [
+        {
+          "name": "from",
+          "writable": true
+        },
+        {
+          "name": "receiver_wallet",
+          "writable": true
+        },
+        {
+          "name": "fee_wallet",
+          "writable": true
+        },
+        {
+          "name": "config",
+          "writable": true
+        },
+        {
+          "name": "mint"
+        },
+        {
+          "name": "authority",
+          "signer": true
+        },
+        {
+          "name": "token_program"
+        },
+        {
+          "name": "system_program",
+          "address": "11111111111111111111111111111111"
+        }
+      ],
+      "args": [
+        {
+          "name": "action",
+          "type": "string"
+        },
+        {
+          "name": "amount",
+          "type": "u64"
+        }
+      ]
+    }
+  ],
+  "accounts": [
+    {
+      "name": "Config",
+      "discriminator": [
+        155,
+        12,
+        170,
+        224,
+        30,
+        250,
+        204,
+        130
+      ]
+    }
+  ],
+  "events": [
+    {
+      "name": "TransferEvent",
+      "discriminator": [
+        100,
+        10,
+        46,
+        113,
+        8,
+        28,
+        179,
+        125
+      ]
+    }
+  ],
+  "errors": [
+    {
+      "code": 6000,
+      "name": "Unauthorized",
+      "msg": "Unauthorized."
+    },
+    {
+      "code": 6001,
+      "name": "IncorrectAmount",
+      "msg": "Amount must be greater than 0."
+    },
+    {
+      "code": 6002,
+      "name": "WrongTokenMint",
+      "msg": "Wrong token mint. This program only accepts the configured token."
+    },
+    {
+      "code": 6003,
+      "name": "InvalidFeePercent",
+      "msg": "Invalid fee percent. Must be between 0 and 100."
+    },
+    {
+      "code": 6004,
+      "name": "InvalidPlatformAction",
+      "msg": "Invalid platform action. Action not supported."
+    },
+    {
+      "code": 6005,
+      "name": "InvalidUserAction",
+      "msg": "Invalid user action. Action not supported."
+    },
+    {
+      "code": 6006,
+      "name": "InvalidAction",
+      "msg": "Invalid action. Action not found or invalid."
+    }
+  ],
+  "types": [
+    {
+      "name": "ActionConfig",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "name",
+            "type": "string"
+          },
+          {
+            "name": "price",
+            "type": "u64"
+          },
+          {
+            "name": "fee_percent",
+            "type": "u8"
+          },
+          {
+            "name": "is_variable",
+            "type": "bool"
+          },
+          {
+            "name": "is_platform_action",
+            "type": "bool"
+          }
+        ]
+      }
+    },
+    {
+      "name": "Config",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "bump",
+            "type": "u8"
+          },
+          {
+            "name": "authority",
+            "type": "pubkey"
+          },
+          {
+            "name": "fee_wallet",
+            "type": "pubkey"
+          },
+          {
+            "name": "platform_wallet",
+            "type": "pubkey"
+          },
+          {
+            "name": "token_mint",
+            "type": "pubkey"
+          },
+          {
+            "name": "actions",
+            "type": {
+              "vec": {
+                "defined": {
+                  "name": "ActionConfig"
+                }
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "TransferEvent",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "action",
+            "type": "string"
+          },
+          {
+            "name": "amount",
+            "type": "u64"
+          },
+          {
+            "name": "fee_percent",
+            "type": "u8"
+          },
+          {
+            "name": "from",
+            "type": "pubkey"
+          },
+          {
+            "name": "to",
+            "type": "pubkey"
+          }
+        ]
+      }
+    }
+  ]
+}
