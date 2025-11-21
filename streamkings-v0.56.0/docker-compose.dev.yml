@@ -1,0 +1,100 @@
+version: '3.8'
+
+services:
+  # frontend:
+  #   build:
+  #     context: .
+  #     dockerfile: Dockerfile
+  #     target: development
+  #   ports:
+  #     - "3000:3000"
+  #   environment:
+  #     - NODE_ENV=development
+  #     - NEXT_PUBLIC_API_URL=http://localhost:3006
+  #     - HOSTNAME=0.0.0.0
+  #     - PORT=3000
+  #   env_file:
+  #     - .env.development
+  #   depends_on:
+  #     - backend
+  #   networks:
+  #     - app-network
+  #   volumes:
+  #     - .:/app
+  #     - /app/node_modules
+  #     - /app/.next
+  #   command: npm run dev
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+      target: dev
+    ports:
+      - "5555:5555"
+      - "3006:3006"
+    environment:
+      - NODE_ENV=development
+      - DATABASE_URL=mysql://user:${MYSQL_PASSWORD}@db:3306/street_kredit
+      - JWT_SECRET=${JWT_SECRET}
+      - HOME=/tmp
+    env_file:
+      - .env.development
+    depends_on:
+      - db
+    networks:
+      - app-network
+    volumes:
+      - ./backend:/app
+      - /app/node_modules
+      - backend-prisma-client:/app/node_modules/.prisma
+    command: npm run dev
+
+  db:
+    image: mysql:8.0
+    ports:
+      - "3307:3306"
+    environment:
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+      - MYSQL_DATABASE=street_kredit
+      - MYSQL_USER=user
+      - MYSQL_PASSWORD=${MYSQL_PASSWORD}
+    env_file:
+      - .env.development
+    volumes:
+      - mysql_data:/var/lib/mysql
+    networks:
+      - app-network
+
+  nginx:
+    image: nginx:alpine
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+    depends_on:
+      - backend
+    networks:
+      - app-network
+
+  stream-server:
+    build:
+      context: ./stream-server
+    ports:
+      - "4000:4000"
+    environment:
+      - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
+      - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
+      - AWS_REGION=${AWS_REGION}
+    env_file:
+      - .env.development
+    networks:
+      - app-network
+
+volumes:
+  mysql_data:
+  backend-prisma-client:
+
+networks:
+  app-network:
+    driver: bridge 

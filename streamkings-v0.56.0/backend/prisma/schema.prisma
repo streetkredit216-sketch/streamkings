@@ -1,0 +1,209 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider      = "prisma-client-js"
+  binaryTargets = ["native", "debian-openssl-3.0.x"]
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+enum UserRole {
+  TASTEMAKER
+  DJ
+  ARTIST
+}
+
+model User {
+  id            String      @id @default(cuid())
+  walletAddress String      @unique
+  username      String      @unique
+  email         String      @unique
+  profilePic    String?     
+  profileBanner String?     
+  role          UserRole
+  description   String      @db.Text
+  streetCredit  Int        @default(0)
+  ranking       Int        @default(0)
+  createdAt     DateTime   @default(now())
+  updatedAt     DateTime   @updatedAt
+  blogs         Blog[]     @relation("AuthoredBlogs")
+  savedBlogs    SavedBlog[] @relation("SavedBlogs")
+  comments      Comment[]  @relation("AuthoredComments")
+  following     Follow[]   @relation("Following")
+  followers     Follow[]   @relation("Followers")
+  events        Event[]
+  songs         Song[]
+  photos        Photo[]    @relation("AuthoredPhotos")
+  savedPhotos   SavedPhoto[] @relation("SavedPhotos")
+  photoComments PhotoComment[] @relation("AuthoredPhotoComments")
+  savedComments SavedComment[] @relation("SavedComments")
+  playlists     Playlist[]
+  purchases     Purchase[]
+}
+
+model Blog {
+  id        String      @id @default(cuid())
+  title     String
+  content   String      @db.Text
+  createdAt DateTime    @default(now())
+  updatedAt DateTime    @updatedAt
+  authorId  String
+  author    User        @relation("AuthoredBlogs", fields: [authorId], references: [id])
+  savedBy   SavedBlog[] @relation("BlogSaves")
+  comments  Comment[]   @relation("BlogComments")
+}
+
+model SavedBlog {
+  id        String   @id @default(cuid())
+  userId    String
+  blogId    String
+  createdAt DateTime @default(now())
+  user      User     @relation("SavedBlogs", fields: [userId], references: [id])
+  blog      Blog     @relation("BlogSaves", fields: [blogId], references: [id])
+
+  @@unique([userId, blogId])
+}
+
+model Follow {
+  id          String   @id @default(cuid())
+  followerId  String
+  followingId String
+  createdAt   DateTime @default(now())
+  follower    User     @relation("Following", fields: [followerId], references: [id])
+  following   User     @relation("Followers", fields: [followingId], references: [id])
+
+  @@unique([followerId, followingId])
+}
+
+model Comment {
+  id        String   @id @default(cuid())
+  content   String   @db.Text
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  authorId  String
+  blogId    String
+  author    User     @relation("AuthoredComments", fields: [authorId], references: [id])
+  blog      Blog     @relation("BlogComments", fields: [blogId], references: [id])
+  savedBy   SavedComment[] @relation("CommentSaves")
+}
+
+model SavedComment {
+  id        String   @id @default(cuid())
+  userId    String
+  commentId String
+  createdAt DateTime @default(now())
+  user      User     @relation("SavedComments", fields: [userId], references: [id])
+  comment   Comment  @relation("CommentSaves", fields: [commentId], references: [id])
+
+  @@unique([userId, commentId])
+}
+
+model Event {
+  id          String   @id @default(cuid())
+  title       String
+  description String   @db.Text
+  date        DateTime
+  location    String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  authorId    String
+  author      User     @relation(fields: [authorId], references: [id])
+}
+
+model Song {
+  id          String    @id @default(cuid())
+  title       String
+  artist      String
+  genre       String
+  audioUrl    String    
+  coverImage  String?   
+  videoUrl    String?   
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  authorId    String
+  author      User      @relation(fields: [authorId], references: [id])
+  playlists   PlaylistSong[]
+  purchases   Purchase[]
+}
+
+model Photo {
+  id          String      @id @default(cuid())
+  imageUrl    String      
+  description String      @db.Text
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+  author      User        @relation("AuthoredPhotos", fields: [authorId], references: [id])
+  authorId    String
+  comments    PhotoComment[] @relation("PhotoComments")
+  savedBy     SavedPhoto[] @relation("PhotoSaves")
+}
+
+model SavedPhoto {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+  photo     Photo    @relation("PhotoSaves", fields: [photoId], references: [id])
+  photoId   String
+  user      User     @relation("SavedPhotos", fields: [userId], references: [id])
+  userId    String
+
+  @@unique([userId, photoId])
+}
+
+model PhotoComment {
+  id        String   @id @default(cuid())
+  content   String   
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  photo     Photo    @relation("PhotoComments", fields: [photoId], references: [id])
+  photoId   String
+  author    User     @relation("AuthoredPhotoComments", fields: [authorId], references: [id])
+  authorId  String
+}
+
+model Video {
+  id           String   @id @default(cuid())
+  title        String
+  artist       String
+  videoUrl     String   // S3 URL for the video file
+  thumbnailUrl String   // S3 URL for the video thumbnail
+  duration     Int      // Duration in seconds
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+model Playlist {
+  id          String    @id @default(cuid())
+  name        String
+  coverImage  String?   
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  authorId    String
+  author      User      @relation(fields: [authorId], references: [id])
+  songs       PlaylistSong[]
+}
+
+model PlaylistSong {
+  id          String    @id @default(cuid())
+  playlistId  String
+  songId      String
+  addedAt     DateTime  @default(now())
+  playlist    Playlist  @relation(fields: [playlistId], references: [id])
+  song        Song      @relation(fields: [songId], references: [id])
+
+  @@unique([playlistId, songId])
+}
+
+model Purchase {
+  id          String    @id @default(cuid())
+  songId      String
+  userId      String
+  purchasedAt DateTime  @default(now())
+  song        Song      @relation(fields: [songId], references: [id])
+  user        User      @relation(fields: [userId], references: [id])
+
+  @@unique([userId, songId])
+} 

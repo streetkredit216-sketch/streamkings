@@ -1,0 +1,77 @@
+{
+  "programId": "D4b2rvBeV4sMAkPRZjytgzWoi1N57jFrrFq2oxDyGPtU",
+  "configPDA": "JBHyCLCgAQBWVavJwrk9AMcEskBAKQtQcREpYGkeVtbg",
+  "tokenMint": "8uPfWgMQiiVXdFZ6c12xzB6MTAWeDPNcqWjrovfNkBoQ",
+  "platformWallet": "skgMLYumACE5CLLmhBz8JxRe9ZyVrKfLZV1xCYn1PdP",
+  "feeWallet": "87wRiNDexEFEo7nrnciVQJPbjEkgdMuzdcYD5V8yqema",
+  "authority": "snowhFdtUoXcJxjLFi75E4dqChyp3SSZboyooLmBhgb",
+  "feeTokenAccount": "EG1VhVL5wMMXpfMKSUBLABbcnxWK2X8ifWVubw3hQi5G",
+  "platformTokenAccount": "JhLxDFUS6q3Wk2zbRsLMMZeFKtKM7egrqn1PMJPsK5T",
+  "actions": [
+    {
+      "name": "follow",
+      "price": "100000000000",
+      "feePercent": 10,
+      "isVariable": false,
+      "isPlatformAction": false
+    },
+    {
+      "name": "comment",
+      "price": "50000000000",
+      "feePercent": 10,
+      "isVariable": false,
+      "isPlatformAction": false
+    },
+    {
+      "name": "tip",
+      "price": "50000000000",
+      "feePercent": 10,
+      "isVariable": false,
+      "isPlatformAction": false
+    },
+    {
+      "name": "show_love",
+      "price": "20000000000",
+      "feePercent": 10,
+      "isVariable": false,
+      "isPlatformAction": false
+    },
+    {
+      "name": "unfollow",
+      "price": "20000000000",
+      "feePercent": 10,
+      "isVariable": false,
+      "isPlatformAction": false
+    },
+    {
+      "name": "denounce",
+      "price": "20000000000",
+      "feePercent": 10,
+      "isVariable": false,
+      "isPlatformAction": true
+    },
+    {
+      "name": "upload_song",
+      "price": "20000000000",
+      "feePercent": 10,
+      "isVariable": false,
+      "isPlatformAction": true
+    },
+    {
+      "name": "delete",
+      "price": "20000000000",
+      "feePercent": 10,
+      "isVariable": false,
+      "isPlatformAction": true
+    },
+    {
+      "name": "blog",
+      "price": "20000000000",
+      "feePercent": 10,
+      "isVariable": false,
+      "isPlatformAction": true
+    }
+  ],
+  "rpcUrl": "https://api.devnet.solana.com",
+  "network": "devnet"
+}

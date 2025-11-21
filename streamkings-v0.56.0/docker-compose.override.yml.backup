@@ -1,0 +1,12 @@
+services:
+  backend:
+    environment:
+      - NODE_ENV=development
+      - DATABASE_URL=mysql://user:${MYSQL_PASSWORD}@db:3306/street_kredit
+      - JWT_SECRET=${JWT_SECRET}
+      - HOME=/tmp
+    volumes:
+      - ./backend:/app
+      - /app/node_modules
+      - backend-prisma-client:/app/node_modules/.prisma
+    command: npm run dev 

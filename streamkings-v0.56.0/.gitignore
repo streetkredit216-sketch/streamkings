@@ -1,0 +1,79 @@
+# dependencies
+node_modules
+/.pnp
+.pnp.js
+
+# testing
+/coverage
+
+# next.js
+/.next/
+/out/
+
+# production
+/build
+/dist
+
+# misc
+.DS_Store
+*.pem
+
+# debug
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# local env files
+.env
+.env.example
+.env.local
+.env.development
+.env.production
+.env.development.local
+.env.test.local
+.env.production.local
+.env.secrets
+.env.backup.*
+backend/.env
+stream-server/.env
+
+# vercel
+.vercel
+
+# typescript
+*.tsbuildinfo
+next-env.d.ts
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Logs
+logs
+*.log
+
+# Runtime data
+pids
+*.pid
+*.seed
+*.pid.lock
+
+# Directory for uploaded files
+/uploads
+
+# Test and debug files with sensitive data
+test-rpc.js
+live.so
+**/configpda.txt
+**/*.txt
+!README.md
+!**/TOKEN_2022_GUIDE.md
+!**/ENVIRONMENT_SETUP.md
+!**/TESTING_GUIDE.md
+
+# Prisma
+/prisma/migrations/
+/prisma/dev.db
+/prisma/dev.db-journal 
